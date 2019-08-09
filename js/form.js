@@ -44,12 +44,7 @@ showFormErrorsBS4 = function (form, errors)
     }
 };
 
-form_refereshPlugins = refreshPlugins;
-
-refreshPlugins = function (el)
-{
-    form_refereshPlugins(el);
-
+refreshPlugins.push(function(el) { 
     var checkInputs = $(el).find('input[type="radio"], input[type="checkbox"]');
     checkInputs.iCheck(iCheckOptions);
     checkInputs.on('ifChanged', function (event)
@@ -135,5 +130,5 @@ refreshPlugins = function (el)
     if ($(el).find('.g-recaptcha').length)
     {
         g_ReCaptchaOnLoad();
-    }
-};
+    } 
+});

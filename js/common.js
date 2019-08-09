@@ -81,31 +81,40 @@ function initGoogleMaps() {
     });
 }
 
-function refreshPlugins(context)
-{
-    $(context).find('.iframePopup').magnificPopup({type: 'iframe'});
-    $(context).find('.ajaxPopup').magnificPopup({type: 'ajax'});
-    $(context).find('.imagePopup').magnificPopup({type: 'image'});
-    $(context).find('.galleryPopup').magnificPopup({type: 'image', delegate: 'a.galleryItem', gallery:{enabled:true}});
-    $(context).find('.photoswipe').each(function() {initPhotoswipe($(this));});
-    $(context).find('[data-toggle="tooltip"]').tooltip();
-    $(context).find('[data-toggle="popover"]').one('mouseenter', function(event) {initPopover($(this));});
-    $(context).find('[target="_export"], a.exportLnk').click(function(event){
+var refreshPlugins = [];
+
+refreshPlugins.push(function(el) {
+    $(el).find('.iframePopup').magnificPopup({type: 'iframe'});
+    $(el).find('.ajaxPopup').magnificPopup({type: 'ajax'});
+    $(el).find('.imagePopup').magnificPopup({type: 'image'});
+    $(el).find('.galleryPopup').magnificPopup({type: 'image', delegate: 'a.galleryItem', gallery:{enabled:true}});
+    $(el).find('.photoswipe').each(function() {initPhotoswipe($(this));});
+    $(el).find('[data-toggle="tooltip"]').tooltip();
+    $(el).find('[data-toggle="popover"]').one('mouseenter', function(event) {initPopover($(this));});
+    $(el).find('[target="_export"], a.exportLnk').click(function(event){
         event.preventDefault();
         window.open($(this).attr('href'), '_blank', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no')
     });
+});
+
+function callRefreshPlugins(el)
+{
+    for (var j = 0; j < refreshPlugins.length; j++) {
+        refreshPlugins[j](el);
+    }
 }
 
 $(document).ready(function ()
 {
     $.nette.ext('snippets').after(function (el)
     {
-        refreshPlugins(el);
+        callRefreshPlugins(el);
     });
+
     $.nette.init();
 
-    refreshPlugins(document.body);
-    
+    callRefreshPlugins(document.body);
+
     const cookiePopup = $('#cookie-popup');
     if (cookiePopup.length && !Cookies.get('cookiePopup'))
     {
