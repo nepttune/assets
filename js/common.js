@@ -84,31 +84,35 @@ function initGoogleMaps() {
 var refreshPlugins = [];
 
 refreshPlugins.push(function(el) {
+    $(el).find('a.ajax').on('click', function(e) { e.preventDefault(); $(this).netteAjax(e);});
+    $(el).find('form.ajax').on('submit', function(e) { e.preventDefault(); $(this).netteAjax(e);});
     $(el).find('.iframePopup').magnificPopup({type: 'iframe'});
     $(el).find('.ajaxPopup').magnificPopup({type: 'ajax'});
     $(el).find('.imagePopup').magnificPopup({type: 'image'});
     $(el).find('.galleryPopup').magnificPopup({type: 'image', delegate: 'a.galleryItem', gallery:{enabled:true}});
-    $(el).find('.photoswipe').each(function() {initPhotoswipe($(this));});
+    $(el).find('.closePopup').on('click', function (e) { setTimeout(function () { window.top.$.magnificPopup.close();});});
+    $(el).find('.photoswipe').each(function() { initPhotoswipe($(this));});
     $(el).find('[data-toggle="tooltip"]').tooltip();
-    $(el).find('[data-toggle="popover"]').one('mouseenter', function(event) {initPopover($(this));});
-    $(el).find('[target="_export"], a.exportLnk').click(function(event){
-        event.preventDefault();
+    $(el).find('[data-toggle="popover"]').one('mouseenter', function(e) { initPopover($(this));});
+    $(el).find('[target="_export"], a.exportLnk').click(function(e) { e.preventDefault();
         window.open($(this).attr('href'), '_blank', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no')
     });
 });
 
-function callRefreshPlugins(el)
-{
+function callRefreshPlugins(el) {
     for (var j = 0; j < refreshPlugins.length; j++) {
         refreshPlugins[j](el);
     }
 }
 
-$(document).ready(function ()
-{
-    $.nette.ext('snippets').after(function (el)
-    {
+$(document).ready(function () {
+    $.nette.ext('snippets').after(function (el) {
         callRefreshPlugins(el);
+    });
+    $(document).ajaxComplete(function() {
+        if ($('.mfp-content').is(':visible')) {
+            callRefreshPlugins($('.mfp-content'));
+        }
     });
 
     $.nette.init();
