@@ -84,8 +84,10 @@ function initGoogleMaps() {
 var refreshPlugins = [];
 
 refreshPlugins.push(function(el) {
-    $(el).find('a.ajax').on('click', function(e) { e.preventDefault(); $(this).netteAjax(e);});
-    $(el).find('form.ajax').on('submit', function(e) { e.preventDefault(); $(this).netteAjax(e);});
+    var ajaxFn = function(e) { e.preventDefault(); $(this).netteAjax(e);}
+    $(el).find('a.ajax').on('click', ajaxFn);
+    $(el).find('form.ajax').on('submit', ajaxFn);
+    $(el).find('input.ajax[type="submit"], input.ajax[type="image"], button.ajax[type="submit"]').on('submit', ajaxFn);
     $(el).find('.iframePopup').magnificPopup({type: 'iframe'});
     $(el).find('.ajaxPopup').magnificPopup({type: 'ajax'});
     $(el).find('.imagePopup').magnificPopup({type: 'image'});
@@ -109,14 +111,14 @@ $(document).ready(function () {
     $.nette.ext('snippets').after(function (el) {
         callRefreshPlugins(el);
     });
+    $.nette.ext('init', null);
+    $.nette.init();
+
     $(document).ajaxComplete(function() {
         if ($('.mfp-content').is(':visible')) {
             callRefreshPlugins($('.mfp-content'));
         }
     });
-
-    $.nette.init();
-
     callRefreshPlugins(document.body);
 
     const cookiePopup = $('#cookie-popup');
