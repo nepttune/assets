@@ -72,15 +72,8 @@ refreshPlugins.push(function(el) {
                         };
                     },
                     processResults: function (data, params) {
-                        var result = [];
-                        $.each(data, function (key, value) {
-                            result.push({
-                                id: key,
-                                text: value
-                            });
-                        });
                         return {
-                            results: result
+                            results: data
                         };
                     }
                 }
