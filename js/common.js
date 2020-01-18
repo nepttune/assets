@@ -15,29 +15,32 @@ function debounce(func, wait, immediate) {
 
 function initPopover(elm)
 {
-    if (elm.data('element'))
-    {
-        elm.popover({
-            html: true,
-            container: 'body',
-            content: $(elm.data('element')[0]).html(),
-            trigger: 'hover focus'
-        }).popover('show');
-    }
-    else if (elm.data('ajax'))
-    {
+    const popoverOptions = {
+        html: true,
+        container: 'body',
+        placement: 'top',
+        trigger: 'hover focus',
+        boundary: 'window'
+    };
+
+    if (elm.data('content')) {
+        elm.popover(Object.assign({
+            content: elm.data('content')
+        }, popoverOptions)).popover('show');
+    } else if (elm.data('element')) {
+        elm.popover(Object.assign({
+            content:  $(elm.data('element')[0]).html()
+        }, popoverOptions)).popover('show');
+    } else if (elm.data('ajax')) {
         $.nette.ajax({
             url: elm.data('ajax'),
             method: 'GET',
             success: function (payload){
-                elm.popover({
-                    html: true,
-                    container: 'body',
-                    content: payload.html,
-                    trigger: 'hover focus'
-                });
-                if (elm.is(':hover'))
-                {
+                elm.popover(Object.assign({
+                    content:  payload.html
+                }, popoverOptions));
+                
+                if (elm.is(':hover')) {
                     elm.popover('show');
                 }
             }
