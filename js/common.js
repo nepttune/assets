@@ -90,7 +90,7 @@ refreshPlugins.push(function(el) {
     var ajaxFn = function(e) { e.preventDefault(); $(this).netteAjax(e);}
     $(el).find('a.ajax').on('click', ajaxFn);
     $(el).find('form.ajax').on('submit', ajaxFn);
-    $(el).find('input.ajax[type="submit"], input.ajax[type="image"], button.ajax[type="submit"]').on('submit', ajaxFn);
+    $(el).find('input.ajax[type="submit"], input.ajax[type="image"], button.ajax[type="submit"]').on('click', ajaxFn);
     $(el).find('.iframePopup').magnificPopup({type: 'iframe'});
     $(el).find('.ajaxPopup').magnificPopup({type: 'ajax'});
     $(el).find('.imagePopup').magnificPopup({type: 'image'});
